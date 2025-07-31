@@ -16,6 +16,8 @@ function novaTarefa(req, res){
     //adicionar no todos.json
 }
 
+module.exports = { novaTarefa }
+
 // let lista = document.querySelector('ul')
 // lista.addEventListener('click', function(event){
 //     if(event.target.tagName === 'LI'){
