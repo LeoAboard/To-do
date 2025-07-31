@@ -1,1 +1,25 @@
-{"name":"leo2","email":"leo2@email.com","password":"1234"}
+[
+  {
+    "id": 1,
+    "name": "João Lucas",
+    "email": "joaoLuczz@email.com",
+    "password": "abc123"
+  },
+  {
+    "id": 2,
+    "name": "Leonardo Armelin",
+    "email": "leo_armelin@email.com",
+    "password": "ABC321"
+  },
+  {
+    "id": 3,
+    "name": "Cláudio Pereira",
+    "email": "claudio1999@email.com",
+    "password": "87654321"
+  },
+  {
+    "id": 4,
+    "name": "Eduardo de Souza",
+    "email": "edu1000@gmail.com"
+  }
+]
