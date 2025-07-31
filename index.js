@@ -5,7 +5,7 @@ const bodyParser = require('body-parser')
 app.use(bodyParser.urlencoded({extended: false}))
 app.use(bodyParser.json())
 
-let { saveUser, verifyUser } = require('./controllers/UserController')
+let { saveUser, userLogin } = require('./controllers/UserController')
 let { novaTarefa } = require('./controllers/ToDoController')
 
 /*---------------ROTAS--------------*/
@@ -18,17 +18,19 @@ app.get('/signin', function(req, res){
     res.sendFile(__dirname + '/routes/formSignin.html')
 })
 
-app.get('/lista', function(req, res){
-    res.sendFile(__dirname + '/routes/formTodo.html')
-})
-
-app.post('/lista', novaTarefa)
+app.post('/signin', userLogin)
 
 app.get('/signup', function(req, res){
     res.sendFile(__dirname + '/routes/formSignup.html')
 })
 
 app.post('/signup', saveUser)
+
+app.get('/lista', function(req, res){
+    res.sendFile(__dirname + '/routes/formTodo.html')
+})
+
+app.post('/lista', novaTarefa)
 
 /*--------------SERVIDOR-------------*/
 
