@@ -6,7 +6,7 @@ app.use(bodyParser.urlencoded({extended: false}))
 app.use(bodyParser.json())
 
 let { saveUser, userLogin } = require('./controllers/UserController')
-let { novaTarefa } = require('./controllers/ToDoController')
+let { novaTarefa, excluirTarefa, atualizarTarefa } = require('./controllers/ToDoController')
 
 /*---------------ROTAS--------------*/
 
@@ -26,11 +26,15 @@ app.get('/signup', function(req, res){
 
 app.post('/signup', saveUser)
 
-app.get('/lista', function(req, res){
+app.get('/lista/', function(req, res){
     res.sendFile(__dirname + '/routes/formTodo.html')
 })
 
 app.post('/lista', novaTarefa)
+
+app.put('/lista', atualizarTarefa)
+
+app.delete('/lista', excluirTarefa)
 
 /*--------------SERVIDOR-------------*/
 

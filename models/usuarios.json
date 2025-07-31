@@ -16,5 +16,10 @@
     "name": "Cláudio Pereira",
     "email": "claudio1999@email.com",
     "password": "87654321"
+  },
+  {
+    "id": 4,
+    "name": "Eduardo de Souza",
+    "email": "edu1000@gmail.com"
   }
 ]
