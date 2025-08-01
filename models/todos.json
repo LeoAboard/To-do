@@ -4,17 +4,5 @@
     "id_user": "",
     "msg": "Trabalhar",
     "status": "pendente"
-  },
-  {
-    "id": 2,
-    "id_user": 2,
-    "msg": "Comprar café",
-    "status": "pendente"
-  },
-  {
-    "id": 3,
-    "id_user": 5,
-    "msg": "Comprar algo",
-    "status": "pendente"
   }
 ]
