@@ -45,14 +45,17 @@ function userLogin(req, res){
     }
 
     let users = require('../models/usuarios.json')
-    const {id, nome, email, senha} = req.body
+    const {email, senha} = req.body
     
-    if(users.find(user => user.email == email && user.password == senha)){
-        users.find(function(user){if(user.email == email){res.send(`Bem vindo ${user.name}`)}})
-    }else{
+    const user = users.find(user => user.email == email && user.password == senha)
+
+    if(!user){
         res.send("Email ou senha incorretos")
     }
+    
+    req.session.id_user = user.id
+    users.find(function(user){if(user.email == email){res.send(`Bem vindo ${user.name}`)}})
+    //res.redirect('http://localhost:3000/lista')
 }
-
 
 module.exports = { saveUser, userLogin }
