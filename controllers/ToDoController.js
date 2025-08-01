@@ -4,24 +4,31 @@ const { JSDOM } = require('jsdom')
 function novaTarefa(req, res){
 
     const filePath = './models/todos.json'
+    const {id_user} = req.session                            //COMO MANTER USUÁRIO LOGADO?
+
+    if(!id_user){
+        res.send("Usuário não logado")
+        return
+    }
     
     if(!fs.existsSync(filePath)){
         fs.writeFileSync(filePath, '[]')
     }
 
     let todos = require('../models/todos.json')
-    let users = require('../models/usuarios.json') //vai ser utilizado para obter o id do usuário
 
     const {inputTodo} = req.body
+
+    if(!inputTodo){
+        return
+    }
+
     const id = todos.length + 1
     let estado = 'pendente'
 
-    //acho que vou delegar a função de modificar o estado para o atualizarTarefa()
-    //como obter o id do usuário correto?
-
     let data = {
         'id': id,
-        'id_user': '',
+        'id_user': id_user,
         'msg': inputTodo,
         'status': estado
     }
@@ -31,7 +38,8 @@ function novaTarefa(req, res){
     try{
         fs.writeFileSync(filePath, JSON.stringify(todos, null, 2), 'utf8')
         //exibirTarefa(inputTodo)
-        res.send('Tarefa enviada')
+        //res.redirect('http://localhost:3000/lista')
+        res.send("Tarefa enviada!")
     }catch(error){
         console.log("Ocorreu um erro", error)
     }
@@ -40,15 +48,64 @@ function novaTarefa(req, res){
 function excluirTarefa(req, res){
 
     const filePath = './models/todos.json'
+    const {id_user} = req.session                       
 
-    todos = require('../models/todos.json')
-    todos.find(exclude_id => todos.id == exclude_id)        //COMO USUÁRIO DEVE ME PASSAR O ID A SER EXCLUIDO?
-                                                            //UTILIZAR A FUNÇÃO FILTER() PARA EXCLUIR O ELEMENTO QUE NAO ATENDE
+    if(!id_user){
+        res.send("Usuário não logado")
+        return
+    }
+
+    const {exclude_id} = req.body                    
+    const todos = require('../models/todos.json')
+
+    if(todos.find(todo => todo.id_user == id_user)){       //autorização
+        todos = todos.filter(todo => todo.id != exclude_id) 
+    }else{
+        res.send("Você não pode excluir esta tarefa!")
+    }
+
+    try{
+        fs.writeFyleSync(filePath, JSON.stringify(todos, null, 2), 'utf8')
+        res.send(todos)
+    }catch(error){
+        console.log("Ocorreu um erro", error)
+    }
 }
 
 function atualizarTarefa(req, res){
 
-    const filePath = './models/todos.json'                 //USUARIO PODE ALTERAR O ESTADO ENTRE PENDENTE <-> CONCLUIDO
+    const filePath = './models/todos.json'               
+    const {id_user} = req.session
+
+    if(!id_user){
+        res.send("Usuário não logado")
+        return
+    }
+
+    const {alter_id} = req.body
+    const todos = require('..models/todos.json')
+
+    if(todos.find(todo => todo.id_user == id_user)){                  //autorização
+        const alter_todo = todos.find(todo => todo.id == alter_id)    //busca o todo a ser alterado
+
+        if(alter_todo.status == "pendente")
+            alter_todo.status = "concluido"
+        else{
+            alter_todo.status = "pendente"
+        }
+
+        todos.push(alter_todo)
+
+    }else{
+        res.send("Você não pode modificar essa tarefa!")
+    }
+
+    try{
+        fs.writeFyleSync(filePath, JSON.stringify(todos, null, 2), 'utf8')
+        res.send(todos)
+    }catch(error){
+        console.log("Ocorreu um erro", error)
+    }
 }
 
 // function exibirTarefa(msg){

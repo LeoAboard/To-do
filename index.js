@@ -1,6 +1,17 @@
 const express = require('express')
 const app = express()
 
+const session = require('express-session')
+app.use(session({
+    secret: '12345',
+    resave: false,
+    saveUninitialized: false,
+    cookie: {secure: false,
+        rolling: true,
+        maxAge: 7 * 24 * 60 * 60 * 1000
+    }
+}))
+
 const bodyParser = require('body-parser')
 app.use(bodyParser.urlencoded({extended: false}))
 app.use(bodyParser.json())

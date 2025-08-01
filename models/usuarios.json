@@ -21,5 +21,11 @@
     "id": 4,
     "name": "Eduardo de Souza",
     "email": "edu1000@gmail.com"
+  },
+  {
+    "id": 5,
+    "name": "Miguel Santos",
+    "email": "migsan13@email.com",
+    "password": "123"
   }
 ]
