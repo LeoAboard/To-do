@@ -1,5 +1,7 @@
 const fs = require('fs')
 
+let { generateToken } = require('./authController')
+
 function saveUser(req, res){
 
     const filePath = './models/usuarios.json'
@@ -45,17 +47,25 @@ function userLogin(req, res){
     }
 
     let users = require('../models/usuarios.json')
-    const {email, senha} = req.body
+    const {id, email, senha} = req.body
     
     const user = users.find(user => user.email == email && user.password == senha)
 
     if(!user){
         res.send("Email ou senha incorretos")
+        return
     }
     
-    req.session.id_user = user.id
+    const token = generateToken(id)
+
+    res.cookie('token', token, {              //envio do token para o cliente
+        httpOnly: true,
+        secure: false,
+        maxAge: 5*24*60*60*1000
+    })
+
     users.find(function(user){if(user.email == email){res.send(`Bem vindo ${user.name}`)}})
-    //res.redirect('http://localhost:3000/lista')
+    return
 }
 
 module.exports = { saveUser, userLogin }
