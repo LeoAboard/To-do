@@ -16,16 +16,11 @@ function authToken(req, res, next){
     const token = req.cookies.token
 
     if(!token){
-        res.send("Usuário nao logado")
+        res.send("Usuário não logado")
         return
     }
 
-    let payload = jwt.verify(token, SECRET)
-
-    if(!payload){
-        res.send("Erro de token")
-        return
-    }
+    const payload = jwt.verify(token, SECRET)
 
     req.id = payload
     next()
