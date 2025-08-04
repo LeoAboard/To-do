@@ -3,7 +3,7 @@ const fs = require('fs')
 function novaTarefa(req, res){
 
     const filePath = './models/todos.json'
-    const id_user = req.id                  //recebimento do id
+    const id_user = req.id                 
     const {inputTodo} = req.body                  
     const todos = require('../models/todos.json')
     

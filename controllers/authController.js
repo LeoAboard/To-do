@@ -1,7 +1,7 @@
 const jwt = require('jsonwebtoken');
 const SECRET = '123'
 
-function generateToken(id){       //gera token
+function generateToken(id){     
     let token = jwt.sign(
         {id: id},
         SECRET,
@@ -11,7 +11,7 @@ function generateToken(id){       //gera token
     return token
 }
 
-function authToken(req, res, next){               //autentica token
+function authToken(req, res, next){             
 
     const token = req.cookies.token
 
