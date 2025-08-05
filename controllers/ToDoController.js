@@ -1,105 +1,52 @@
 const fs = require('fs')
+const { generateToken } = require('../middlewares/auth')
 
 class todoController{
 
-    novaTarefa(req, res){
+    constructor(con) {
+        this.con = con
 
-        const filePath = './models/todos.json'
-        const id_user = req.id                 
-        const {inputTodo} = req.body                  
-        const todos = require('../models/todos.json')
+        this.novaTarefa = this.novaTarefa.bind(this)
+        this.excluirTarefa = this.excluirTarefa.bind(this)
+        this.atualizarTarefa = this.atualizarTarefa.bind(this)
+        this.exibirTarefas = this.exibirTarefas.bind(this)
+    }
+
+    novaTarefa(req, res) {
+        const { mensagem } = req.body
+        const id = req.id.id
+        const status = 0
+
+        let date = new Date()
+        date = date.toISOString()
+        date = date.slice(0, 19)
+
+        const query = `INSERT INTO lista (id_usuario, mensagem, status, data_cadastro, data_atualizacao) VALUES ("${id}", "${mensagem}", "${status}", "${date}", "${date}")`
+        this.con.query(query, function (err) {
+            if (err) { res.send(`Erro ao inserir: ${err}`) }
+            else { res.send(`Sua tarefa foi enviada: ${mensagem}`) }
+        })
+    }
+
+    excluirTarefa(req, res) {
+
+
+    }
+
+    atualizarTarefa(req, res) {
         
-        if(!fs.existsSync(filePath)){
-            fs.writeFileSync(filePath, '[]')
-        }
 
-        if(!inputTodo){
-            return
-        }
-
-        const id = todos.length + 1
-        const estado = 'pendente'
-
-        const data = {
-            'id': id,
-            'id_user': id_user,
-            'msg': inputTodo,
-            'status': estado
-        }
-
-        todos.push(data)
-
-        try{
-            fs.writeFileSync(filePath, JSON.stringify(todos, null, 2), 'utf8')
-            res.send("Tarefa enviada!")
-        }catch(error){
-            console.log("Ocorreu um erro", error)
-        }
-    }
-
-    excluirTarefa(req, res){
-
-        const filePath = './models/todos.json'
-        const id_user = req.id            
-        const {exclude_id} = req.body                    
-        const todos = require('../models/todos.json')
-
-        if(!exclude_id){
-            res.send("nao recebeu id")
-            return
-        }
-
-        if(todos.find(todo => todo.id_user == id_user)){              //autorização não funciona pq esse todo.id_user nao existe
-            todos = todos.filter(todo => todo.id != exclude_id) 
-        }else{
-            res.send("Você não pode excluir esta tarefa!")
-        }
-
-        try{
-            fs.writeFyleSync(filePath, JSON.stringify(todos, null, 2), 'utf8')
-            res.send(todos)
-        }catch(error){
-            console.log("Ocorreu um erro", error)
-        }
-    }
-
-    atualizarTarefa(req, res){
-
-        const filePath = './models/todos.json'               
-        const id_user = req.id
-        const {alter_id} = req.body
-        const todos = require('../models/todos.json')
-
-        if(!alter_id){
-            res.send("nao recebeu id")
-            return
-        }
-
-        if(todos.find(todo => todo.id_user == id_user)){                  //autorização não funciona pq esse todo.id_user nao existe
-            const alter_todo = todos.find(todo => todo.id == alter_id)
-
-            if(alter_todo.status == "pendente")
-                alter_todo.status = "concluido"
-            else{
-                alter_todo.status = "pendente"
-            }
-
-            todos.push(alter_todo)
-
-        }else{
-            res.send("Você não pode modificar essa tarefa!")
-        }
-
-        try{
-            fs.writeFyleSync(filePath, JSON.stringify(todos, null, 2), 'utf8')
-            res.send(todos)
-        }catch(error){
-            console.log("Ocorreu um erro", error)
-        }
     }
 
     exibirTarefas(req, res){
+        const id = req.id.id
 
+        const query = `SELECT mensagem, status FROM lista WHERE id_usuario = "${id}"`
+
+        this.con.query(query, function (err, result) {
+            if (err) { res.send(`Erro ao exibir: ${err}`) }
+            else { res.send(result) }
+        })
     }
 }
 

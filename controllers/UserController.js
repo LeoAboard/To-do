@@ -1,6 +1,5 @@
 const fs = require('fs')
 const { generateToken } = require('../middlewares/auth')
-const { ReadableStreamDefaultController } = require('stream/web')
 
 class userController {
 
