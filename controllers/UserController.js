@@ -16,12 +16,14 @@ class userController {
     exibirUsuario(req, res) {
         const { nome } = req.body
 
-        const query = `SELECT * FROM usuario WHERE nome = "${nome}"`
+        const query = `SELECT nome, email FROM usuario WHERE nome = "${nome}"`
 
-        this.con.query(query, function (err, result) {
-            if (err) { res.send(`Erro ao exibir: ${err}`) }
-            else { res.send(result) }
+        this.con.query(query, function(err, result) {
+            if(err) { res.send(`Erro ao exibir: ${err}`) }
+            else{ res.send(result) }
         })
+
+        return
     }
 
     async saveUser(req, res) {
@@ -47,8 +49,8 @@ class userController {
 
         const query = `INSERT INTO usuario (nome, email, senha, data_cadastro, data_atualizacao) VALUES ("${nome}", "${email}", "${senha}", "${date}", "${date}")`
         this.con.query(query, function (err) {
-            if (err) { res.send(`Erro ao inserir: ${err}`) }
-            else { res.send(`Usuário ${nome} cadastrado com sucesso!`) }
+            if(err){ res.send(`Erro ao inserir: ${err}`) }
+            else{ res.send(`Usuário ${nome} cadastrado com sucesso!`) }
         })
 
         return
@@ -142,14 +144,18 @@ class userController {
 
     excluirUsuario(req, res) {
         const { email, senha } = req.body
+        const id = req.id.id
 
-        const query = `DELETE FROM usuario WHERE email = "${email}" AND senha = "${senha}"`
+        let query = `DELETE FROM lista WHERE id_usuario = "${id}"`
         this.con.query(query, function(err){
-            if(err) { res.send(`Erro ao excluir: ${err}`)}
-            else{res.send(`Sua conta foi excluida.`)}
+            if(err){ res.send(err) }
         })
 
-        res.cookie('token', '', {expires: new Date(0)})
+        query = `DELETE FROM usuario WHERE email = "${email}" AND senha = "${senha}" AND id = "${id}"`
+        this.con.query(query, function(err, result){
+            if(err || result.affectedRows == 0){ res.send('Você não pode excluir esta conta'); }
+            else{ res.cookie('token', '', {expires: new Date(0)}); res.send("Usuário excluido com sucesso") }
+        })
 
         return
     }
